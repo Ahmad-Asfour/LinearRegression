@@ -1,4 +1,4 @@
-
+import numpy as np
 class Multi_Dim_LR:
     def __init__(self, points, initial_theta, iternum, lr):
         '''
@@ -16,7 +16,13 @@ class Multi_Dim_LR:
         '''
         Computes and returns MSE for a given theta
         '''
-        pass
+        n = len(points)
+        bias = theta[0]
+        weights = theta[1:]
+
+        mse = (np.sum((points[: , -1] - (points[: , :-1] @ weights + bias))  ** 2 )) / n
+        
+        return mse
     
     def gdb_runner(self, points, starting_theta, lr, iternum):
         '''

@@ -21,7 +21,7 @@ class Multi_Dim_LR:
         weights = theta[1:]
 
         mse = (np.sum((points[: , -1] - (points[: , :-1] @ weights + bias))  ** 2 )) / n
-        
+
         return mse
     
     def gdb_runner(self, points, starting_theta, lr, iternum):
@@ -29,7 +29,11 @@ class Multi_Dim_LR:
         goes through all iterations in iternum continuously updating theta
         returns theta
         '''
-        pass
+        theta = starting_theta
+        for i in range(iternum):
+            theta = self.step_gradient(theta, points, lr)
+        return theta
+    
 
     def step_gradient(self, theta, points, lr):
         '''

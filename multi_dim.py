@@ -1,6 +1,6 @@
 import numpy as np
 class Multi_Dim_LR:
-    def __init__(self, points, initial_theta, iternum, lr):
+    def __init__(self, points, initial_theta, iternum, lr, batch_size):
         '''
         points: 2D numpy array (nxd)
         initial_theta: np array of length d+1
@@ -11,6 +11,7 @@ class Multi_Dim_LR:
         self.initial_theta = initial_theta
         self.iternum = iternum
         self.lr = lr
+        self.batch_size = batch_size
 
     def compute_err(self, points, theta):
         '''
@@ -40,7 +41,31 @@ class Multi_Dim_LR:
         Calculates the next step by using the average gradient of a batch of datapoints
             -> basically for each datapoint in the batch we need to calculate each "feature's" (or "weight's") gradient
         '''
-        pass
+        batch_size = self.batch_size
+        X = points[: , :-1]
+        y = points[: , -1:]
+
+        beta = theta[0]
+        weights = theta[1:]
+
+        indices = np.random.choice(X.shape[0], size=batch_size, replace=False)
+        x_batch = X[indices]
+        y_batch = y[indices]
+
+        y_pred = beta + x_batch @ weights
+        err = y_batch - y_pred
+        
+        grad_beta = -2 * np.sum(err) / batch_size
+        grad_weights = -2 * x_batch.T@err / batch_size
+
+        new_weights = weights - lr*grad_weights
+        new_beta = beta - lr*grad_beta
+        new_theta = np.insert(new_weights, 0, new_beta)
+
+        return new_theta
+
+
+
 
     def run(self):
         '''
